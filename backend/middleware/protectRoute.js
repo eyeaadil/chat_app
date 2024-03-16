@@ -9,7 +9,7 @@ const protectRoute = async(req,res,next)=>{
         // console.log(token);
         if(!token) return res.json({error:true,msg:"No Token Provided"});
         const decoded  = jwt.verify(token, process.env.JWT_SECRET)
-        console.log(decoded)
+        // console.log(decoded)
 
         if(!decoded){
             return res.json({error:"unauthorised - Invalid Token"})
@@ -18,7 +18,7 @@ const protectRoute = async(req,res,next)=>{
         const user = await User.findById(decoded.userId).select("password");
 
         // console.log(user)
-        console.log(decoded.userId)
+        // console.log(decoded.userId)
         // console.log(userId);
         if(!user){
             return res.json({error: "  User not found"})

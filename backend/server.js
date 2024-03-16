@@ -1,25 +1,35 @@
+import path from "path";
 import express from "express";
-import authRoutes from "./routes/auth.routes.js"
-import messageRoutes from "./routes/message.Routes.js"
-import userRoutes from "./routes/user.routes.js"
-const app = express();
 import dotenv from "dotenv";
-import connectDB from "./db/dbConnect.js";
 import cookieParser from "cookie-parser";
-dotenv.config();
-const PORT = process.env.PORT || 5000;
 
+import authRoutes from "./routes/auth.routes.js";
+import messageRoutes from "./routes/message.Routes.js";
+import userRoutes from "./routes/user.routes.js";
+import connectDB from "./db/dbConnect.js";
+// import connectToMongoDB from "./db/connectToMongoDB.js";
+import { app, server } from "./socket/socket.js";
+
+const PORT = process.env.PORT || 5000;
 connectDB();
-app.use(express.json())
+// const __dirname = path.resolve();
+
+dotenv.config();
+
+app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
 app.use(cookieParser());
-app.use("/api/auth",authRoutes) 
-app.use("/api/messages",messageRoutes)
+
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-app.get("/", ( req ,res  )=>{
-    return   res.send("Welcome to the API");
+// app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-})
-app.listen(PORT,()=>{
-    console.log(`server is running on port ${PORT}`)
-})
+// app.get("*", (req, res) => {
+// 	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+// });
+
+server.listen(PORT, () => {
+	
+	console.log(`Server Running on port ${PORT}`);
+});
